@@ -43,9 +43,9 @@ ageX = map(float,ageArr)
 
 y = resultY
 
-dataSplit = 150
+dataSplit = 32
   
-allFeatures = [biRadsX, shapeX, densityX, marginX]
+allFeatures = [ageX, shapeX, densityX, marginX]
 X = []
 for i in range(0, len(resultY)):
    X.append([])
@@ -61,9 +61,7 @@ clf = clf.fit(X, y)
 print(clf.feature_importances_) 
 model = SelectFromModel(clf, prefit=True)
 x2d = model.transform(X)
-
 print(x2d)
-
 poly = PolynomialFeatures(degree=2)
 X = poly.fit_transform(X)
 '''
@@ -78,7 +76,7 @@ def dataTraining():
    global mamSVM
    global guesses
    global distancesFromBoundary 
-   mamSVM = svm.SVC(kernel='rbf', gamma=22.4, C=10.6) #best gamma and C = 0.3, 0.1 respectively
+   mamSVM = svm.SVC(kernel='rbf', gamma=0.3, C=0.1) #best gamma and C = 0.3, 0.1 respectively
    mamSVM.fit(X[0:dataSplit],resultY[0:dataSplit]) #Right now using x and works with any number of features
    
    
