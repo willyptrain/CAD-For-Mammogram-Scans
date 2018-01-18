@@ -31,3 +31,11 @@ print(float(posCount)/float(totalP))
 print(float(negCount)/float(totalN))
 print(float(posCount)/float(posCount+fNegCount))
 print(float(negCount)/float(negCount+fPosCount))
+
+'''
+Returned Values: 
+   Positive Accuracy: 97%
+   Negative Accuracy: 6.3679245283%
+   Sensitivity: 98.9795918367%
+   Specificity: 6.3981042654%
+'''
