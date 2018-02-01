@@ -1,8 +1,11 @@
 import urllib2
 import urllib
-from bs4 import BeautifulSoup
-import httplib
 import os
+import matplotlib as plt
+import numpy as np
+import cv2
+from PIL import Image
+
 
 '''
 Prefix rules: 
@@ -24,6 +27,9 @@ Images in each:
       
    Cancer: 
       3656, 914 cases
+      
+      Total image count: 9528
+      
 Deleted cases from volume 7 because of faulty url
  ("""case4500	case4501	case4502	case4503	case4505	case4506	case4508	case4509
       case4510	case4511	case4512	case4513	case4514	case4515	case4516	case4517
@@ -354,56 +360,17 @@ def download():
       elif(urlsForText[i][57:58] == "c"):
          print(i)
    '''
-   '''
-   for c in range(0,len(urlsForText)): 
-      page = urllib.urlopen(urlsForText[c])
-      bs = BeautifulSoup(page,'html.parser')   
-      info = (bs.findAll('pre'))
-      abnormality_count = 0
-      pref = urlsForText[c][57:58]
-      if((pref == 'n') and (c == 0)):
-         source = "MamImages/WrittenData/normal.txt"
-         text_file = open(source, "r+")
-         text_file.write("Normal")
-         text_file.write("\n")
-         text_file.write("\n")
-      elif((pref == 'b') and (c==1606)):
-         source = "MamImages/WrittenData/benign.txt"
-         text_file = open(source, "r+")
-         text_file.write("Benign")
-         text_file.write("\n")
-      elif((pref == "c") and (c==693)):
-         source = "MamImages/WrittenData/cancer.txt"
-         text_file = open(source, "r+")
-         text_file.write("Benign")
-         text_file.write("\n")
-      for i in range(0,len(info)): 
-         info[i] = info[i].text.strip().split() #info[i] = [u'ics_version 1.0', u'filename A-0239-1', u'DATE_OF_STUDY 2 12 1991', u'PATIENT_AGE 47', u'FILM', u'FILM_TYPE REGULAR', u'DENSITY 3', u'DATE_DIGITIZED 20 6 1996', u'DIGITIZER DBA 21', u'SEQUENCE', u'LEFT_CC LINES 5416 PIXELS_PER_LINE 2281 BITS_PER_PIXEL 16 RESOLUTION 42 NON_OVERLAY', u'LEFT_MLO LINES 5221 PIXELS_PER_LINE 2866 BITS_PER_PIXEL 16 RESOLUTION 42 NON_OVERLAY', u'RIGHT_CC LINES 5296 PIXELS_PER_LINE 2251 BITS_PER_PIXEL 16 RESOLUTION 42 NON_OVERLAY', u'RIGHT_MLO LINES 5251 PIXELS_PER_LINE 2776 BITS_PER_PIXEL 16 RESOLUTION 42 NON_OVERLAY']
-         for w in range(0,len(info[i])-1):
-            bit = info[i][w]
-            if bit.lower() in important_info:
-               if(bit.lower() == "total_abnormalities"):
-                  abnormality_count += int(info[i][w+1])
-               if(bit.lower() != "file:"):
-                  text_file.write(bit.lower() + ": " + info[i][w+1])
-                  text_file.write("\n")
-               else:
-                  text_file.write(bit.lower() + " " + info[i][w+1])
-                  text_file.write("\n")
-            if((w == len(info[i])-2) and i == len(info)-1): 
-               text_file.write("Abnormality Count: " + str(abnormality_count))
-               text_file.write("\n")
-               text_file.write("\n")
-           
-      #print(float(c)/float(len(urlsForText)))
+
+
    
-   text_file.close()
-   '''
-   
-    
-   
-   
-   
+      
 if __name__ == '__main__':
    download()
    
+   
+   print("worked")
+   
+   
+   
+   #To activate virtualenv, use: 
+   #source isr/bin/activate
