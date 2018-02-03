@@ -9,7 +9,7 @@ import urllib
 from PIL import Image
 import os
 import cv2
-import keras
+#import keras
 
 
 
@@ -66,8 +66,7 @@ def get_cancer_lesion_files():
             img_type = (line.split())[1].split('.')[1]
             cancer_lesions.append(cancer_prefix+"c_case"+str(line.split()[1][2:6])+"."+ img_type + img_suffix)    
             
-   print(cancer_lesions)        
-   #c_case0041.LEFT_MLO.LJPEG.1_highpass.gif
+   return cancer_lesions
    
 def get_benign_lesions_files(): 
    key = "file:"
@@ -78,57 +77,58 @@ def get_benign_lesions_files():
             img_type = (line.split())[1].split('.')[1]
             benign_lesions.append(benign_prefix+"b_case"+str(line.split()[1][2:6])+"."+ img_type + img_suffix)    
             
-   print(benign_lesions) 
+   return benign_lesions
    
 def rgbToGray(img_source): 
    img = Image.open(img_source).convert('LA')
    return img
     
+def flip_img(source):
+   img = Image.open(source)
+   #rot_img = img.transpose(img.FLIP_LEFT_RIGHT)
+   #rot_img.show()
+    
 def crop_out_lesion(source):
-   #cancer_lesions
-   #benign_lesions
-   #try binarizing using red or green
-   #255,0,0 is red
    x = []
    y = []
+   x2 = []
+   y2 = []
+   deltaX = []
+   deltaY = []
    coords = []
    colors_for_coords = []
    pix = get_pixels(source)
    for i in range(0, pix.shape[0]):
       for c in range(0, pix.shape[1]):
-         #print(pix[i][c])
          red = pix[i][c][0]
          blue = pix[i][c][1]
          green = pix[i][c][2]
          if(red == 255 and blue == 0 and green == 0): 
-            coords.append([i, c])
-   
-   #for i in range(0, len(coords)):
-   
-            
-   #print(coords)
-   plt.scatter(x, y)   
-   
-   open_img(source)
+            coords.append([c, i])
+            x2.append(c)
+            y2.append(i)
+
+   delX = 0   
+   delY = 0
+   x = []
+   index = -1
+   y = []
+   y_index = -1
+   coords_lesions = []
+   for i in range(0, len(coords)-1):
+      
+      
+     
+   plt.scatter(x,y)
    plt.show()
-   #should return img
+   #open_img(source)
+   #print(coords_lesions)
    
-
-
+   
 if __name__ == '__main__':
    
-   #open_img(cancer_lesions[0])
-   crop_out_lesion(cancer_lesions[0])
-      
-   #img = Image.open(file_source[4000]).convert('LA')   
-   #open_img("MamImages/Images/benign/b_case0029.LEFT_MLO.LJPEG.1_highpass.gif")  
-   
-   
-   
-   
-   
-   
-   
+   crop_out_lesion(cancer_lesions[1])
+    
    #crop out to only show breat
    #Crop out lesions, crop out random normal regions for training
    #mirror images to one side, then you can crop out regions of similar range and delete those with too much black space
