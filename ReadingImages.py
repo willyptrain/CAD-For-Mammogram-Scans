@@ -32,6 +32,11 @@ Images in each:
       3656, 914 cases
       
       Total image count: 9528
+   
+   Cropped Lesion Count: 
+      Cancer: 1896
+      Benign: 1760
+      
 '''
 
 def get_pixels(img_source):
@@ -127,23 +132,52 @@ def crop_out_lesion(source):
          green = pix[i][c][1]
          blue = pix[i][c][2]
          if(red == 255 and green == 0 and blue == 0): 
-            lesion_with_border[i][c] = [255., 255., 255., 0]
-         if(red == 0 and green == 0 and blue == 0): 
-            lesion_with_border[i][c] = [255., 255., 255., 0]         
+            lesion_with_border[i][c] = [0., 0., 0., 0]
+         #else:
+         #   lesion_with_border[i][c] = [255., 255., 255., 0]         
+   for i in range(0, lesion_with_border.shape[0]):
+      for c in range(0, lesion_with_border.shape[1]):
+         red = pix[i][c][0]
+         green = pix[i][c][1]
+         blue = pix[i][c][2]
+         if(red == 0. and blue == 0. and green == 0.):
+            lesion_with_border[i][c] = [0., 0., 0., 0]
+            
+   min_x = coords[0][0]
+   min_y = coords[0][1]
+   max_x = coords[0][0]
+   max_y = coords[0][1]
+   for i in range(0, len(coords)):
+      if(coords[i][0] < min_x):
+         min_x = coords[i][0]
+      if(coords[i][1] < min_y):
+         min_y = coords[i][1]
+      if(coords[i][0] > max_x):
+         max_x = coords[i][0]
+      if(coords[i][1] > max_y):
+         max_y = coords[i][1]
+
+    
+   lesion_with_border = lesion_with_border[min_y:max_y,min_x:max_x]
    
-   
-   '''img_type = source[35:44]
+
+   img_type = source[35:44]
    if(img_type == "RIGHT_MLO"):
-      cv2.imwrite('MamImages/Images/benign_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"right_mlo"+".png"), lesion_with_border)
+      cv2.imwrite('MamImages/Images/cancer_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"right_mlo"+".png"), lesion_with_border)
    elif(img_type == "LEFT_MLO."):
-      cv2.imwrite('MamImages/Images/benign_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"left_mlo"+".png"), lesion_with_border)
+      cv2.imwrite('MamImages/Images/cancer_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"left_mlo"+".png"), lesion_with_border)
    elif(img_type == "RIGHT_CC."):
-      cv2.imwrite('MamImages/Images/benign_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"right_cc"+".png"), lesion_with_border)
+      cv2.imwrite('MamImages/Images/cancer_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"right_cc"+".png"), lesion_with_border)
    elif(img_type == "LEFT_CC.L"):
-      cv2.imwrite('MamImages/Images/benign_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"left_cc"+".png"), lesion_with_border)
-   '''     
+      cv2.imwrite('MamImages/Images/cancer_lesions/'+"b_"+(source[26:34]+"_lesion"+"_"+"left_cc"+".png"), lesion_with_border)
+
+def crop_training(source):
+   return 0
+   
+   
 
 
 if __name__ == '__main__':
-   open_img(cropped_benign[0])
+   crop_training('')
+   
    
