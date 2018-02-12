@@ -8,13 +8,17 @@ from scipy.misc import imread, imsave
 import urllib
 import os
 import random
-'''import cv2
+import cv2 
 import keras
 import tensorflow
-'''
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.utils import np_utils
+
 '''
 
-   NOTES:
+NOTES:
 1756 benign cropped lesions
 1896 cancer
 Total: 3652
@@ -160,10 +164,11 @@ def organize():
    #convert pixel data to black and white
    #iterate to fill X with both cancer and benign cases in random order
    global x,y
-   global x_train, y_train
+   global x_train, y_train, x_test, y_test
    for i in range(0, len(cropped_cancer)):
       im = Image.open('MamImages/Images/cancer_lesions/'+cropped_cancer[i],'r')
       im = im.convert('L')
+      im = im.resize((28,28),Image.ANTIALIAS)
       pix = im.getdata()
       arr_pix = []
       w, h = pix.size
@@ -172,11 +177,12 @@ def organize():
          arr_pix.append([])
          for c in range(0, h):
             arr_pix[s].append(pix.getpixel((s,c)))
-      arr_pix = np.array(arr_pix)
+      #arr_pix = (np.array(arr_pix))#.resize(1,28,28)
       x.append(arr_pix)
    for c in range(0, len(cropped_benign)):
       im = Image.open('MamImages/Images/benign_lesions/'+cropped_benign[c],'r')
       im = im.convert('L')
+      im = im.resize((28,28),Image.ANTIALIAS)
       pix = im.getdata()
       arr_pix = []
       w, h = pix.size
@@ -185,21 +191,29 @@ def organize():
          arr_pix.append([])
          for c in range(0, h):
             arr_pix[s].append(pix.getpixel((s,c)))
-      arr_pix = np.array(arr_pix)
+      #arr_pix = np.array(arr_pix)#.resize(1,28,28)
       x.append(arr_pix)
    
    shuffle_input()
-   x_train = x[0:50]
-   y_train = x[0:50]
+   x_train = (np.array(x[0:2500]).astype('float32'))
+   x_train /= 255.0
+   y_train = np.array(y[0:2500])
+   x_test = (np.array(x[2500:]).astype('float32'))
+   x_train /= 255.0
+   y_test = np.array(y[2500:])
    
    
-   
+      
 def shuffle_input():
    for i in range(0, len(x)):
       rand_i = random.randint(0,len(x)-1)
       x[rand_i],x[i] = x[i], x[rand_i]
       cropped_tumors[rand_i], cropped_tumors[i] = cropped_tumors[i], cropped_tumors[rand_i]
       y[rand_i],y[i] = y[i], y[rand_i]
+      
+      
+def train():
+   model = Sequential()
                    
          
 def open_img(source):
@@ -211,7 +225,8 @@ if __name__ == '__main__':
 
    #do some quantum noise removal
    organize()
-
+   train()
+   
    '''
    1. BI-RADS assessment: 1 to 5 (ordinal)  
    2. Age: patient's age in years (integer)
