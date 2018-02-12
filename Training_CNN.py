@@ -13,8 +13,9 @@ import keras
 import tensorflow
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import MaxPooling2D
 from keras.utils import np_utils
+from keras.layers.convolutional import Conv2D
 
 '''
 
@@ -178,7 +179,7 @@ def organize():
          for c in range(0, h):
             arr_pix[s].append(pix.getpixel((s,c)))
       #arr_pix = (np.array(arr_pix))#.resize(1,28,28)
-      x.append(arr_pix)
+      x.append([arr_pix])
    for c in range(0, len(cropped_benign)):
       im = Image.open('MamImages/Images/benign_lesions/'+cropped_benign[c],'r')
       im = im.convert('L')
@@ -192,17 +193,20 @@ def organize():
          for c in range(0, h):
             arr_pix[s].append(pix.getpixel((s,c)))
       #arr_pix = np.array(arr_pix)#.resize(1,28,28)
-      x.append(arr_pix)
+      x.append([arr_pix])
    
    shuffle_input()
    x_train = (np.array(x[0:2500]).astype('float32'))
-   x_train /= 255.0
+   #x_train /= 255.0
    y_train = np.array(y[0:2500])
    x_test = (np.array(x[2500:]).astype('float32'))
-   x_train /= 255.0
+   #x_train /= 255.0
    y_test = np.array(y[2500:])
-   
-   
+   #plt.imshow(x_train[0])
+   #plt.show()
+   #print(x_train.shape)
+   x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
+   #print(x_train.shape)
       
 def shuffle_input():
    for i in range(0, len(x)):
@@ -214,6 +218,24 @@ def shuffle_input():
       
 def train():
    model = Sequential()
+   model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(28,28,1)))
+   print(model.output_shape)
+   model.add(Conv2D(32, (3, 3), activation='relu'))
+   print(model.output_shape)
+   model.add(MaxPooling2D(pool_size=(2,2)))
+   print(model.output_shape)
+   model.add(Dropout(0.25))
+   print(model.output_shape)
+   model.add(Flatten())
+   print(model.output_shape)
+   model.add(Dense(128, activation='relu'))
+   print(model.output_shape)
+   model.add(Dropout(0.5))
+   print(model.output_shape)   
+   model.add(Dense(5, activation='softmax'))
+   print(model.output_shape)
+   model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) 
+   model.fit(x_train, y_train, batch_size=32, epochs=10, verbose=1)
                    
          
 def open_img(source):
@@ -225,7 +247,7 @@ if __name__ == '__main__':
 
    #do some quantum noise removal
    organize()
-   train()
+   #train()
    
    '''
    1. BI-RADS assessment: 1 to 5 (ordinal)  
