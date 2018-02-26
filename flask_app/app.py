@@ -7,12 +7,8 @@ app = Flask(__name__)
 DATABASE = 'database.db'
 
 db = sqlite3.connect(DATABASE)
-print("opened db")
 db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, assessment TEXT)')
-print("added table")
 db.close()
-
-
 
 @app.route("/")
 def home():
@@ -27,7 +23,6 @@ def home():
 @app.route('/new_pat')
 def new_patient():
    return render_template('new_patient.html')
-   
    
 @app.route('/addpat',methods = ['POST', 'GET'])
 def addpat(): 
@@ -53,16 +48,9 @@ def addpat():
       finally:      
          return render_template("status_update.html",msg = msg)
          db.close()
-   
-
-   
-
-    
-    
+ 
 if __name__ == "__main__":
     app.run(debug=True)
     
-    
-    
-    
+        
     
