@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+ 
+<head>
+<body>
+     
+    <form action = "{{ url_for('addpat') }}" method = "POST">
+         <h3>Patient Info</h3>
+         Case<br>
+         <input type = "text" name = "case" /></br>
+         
+         Name<br>
+         <textarea name = "name" ></textarea><br>
+         
+         Age<br>
+         <input type = "text" name = "age" /><br>
+         
+         Assessment<br>
+         <input type = "text" name = "assessment" /><br>
+         <input type = "submit" value = "submit" /><br>
+    </form>
+      
+   </body>

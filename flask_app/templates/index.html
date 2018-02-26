@@ -2,12 +2,34 @@
 <html lang="en">
  
  
-    <head>
+<head>
+	<title>Flask App </title>
+	    
     
-    
-    
-    </head>
-    <body>
-        <p>welcome breh</p>
-    
-    </body>
+</head>
+<body>
+	<a href='/new_pat'><p>New patient</p></a>
+	<table border = 1>
+         <thead>
+            <td>Case</td>
+            <td>Name</td>
+            <td>Age</td>
+            <td>Assessment</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["case_num"]}}</td>
+               <td>{{row["name"]}}</td>
+               <td> {{ row["age"]}}</td>
+               <td>{{row['assessment']}}</td>	
+            </tr>
+         {% endfor %}
+      </table>
+</body>
+<script>
+	
+	
+	
+
+</script>
