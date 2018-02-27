@@ -8,8 +8,9 @@ from scipy.misc import imread, imsave
 import urllib
 import os
 import random
-from keras.utils import np_utils
+#from keras.utils import np_utils
 from PIL import ImageFilter
+
 import cv2 
 import keras
 import tensorflow
@@ -23,6 +24,7 @@ from keras import regularizers
 from keras import backend as K
 from keras.optimizers import Adam
 from keras.utils import plot_model
+from keras.models import model_from_json
 
 '''
 
@@ -131,7 +133,7 @@ def get_written_data():
    for i in open('benign.txt'):  
       if(len(i.split()) == 0):
          info.append([])
-         index +=1 
+         index +=1   
       else:
          info[index].append(i.split())
    info = info[1:]
@@ -269,11 +271,13 @@ def organize():
    '''
 
    shuffle_input()
-   x_train = (np.array(x[0:data_split]).astype('float32'))
+   x_train = x[0:data_split]
+   x_test = x[data_split:]
+   x_train = (np.array(x_train).astype('float32'))
    x_train /= 255.0
    x_val = (np.array(x[data_split:data_split+validation_int]).astype('float32'))
    x_val /= 255.0
-   x_test = (np.array(x[data_split+validation_int:])).astype('float32')
+   x_test = (np.array(x_test)).astype('float32')
    x_test /= 255.0
    x_train = x_train.reshape(x_train.shape[0], img_h_w, img_h_w, 1)
    x_test = x_test.reshape(x_test.shape[0], img_h_w, img_h_w, 1)
@@ -287,8 +291,13 @@ def organize():
    y_val = np_utils.to_categorical(y_val, 2)
    y_test = np_utils.to_categorical(y_test, 2)
    #ground_truth_test = (np.array(y[data_split+validation_int:])).astype('float32')
-
-
+   
+   #print(x_test)
+   #print(y_train)
+   #print(y_test)
+   
+   
+   
       
 def shuffle_input():
    for i in range(0, len(x)):
@@ -338,12 +347,31 @@ def train(epochs, batch_size, loss, optimizer):
       else:
          ground_truth_test.append("1")
    
+   pos_acc = get_positive_accuracy(predictions, ground_truth_test)
+   neg_acc = get_negative_accuracy(predictions, ground_truth_test)
    print("Predictions:")
    print(predictions[0:20])
    print("Truth: ")
    print(ground_truth_test[0:20])
-   print("Positive accuracy: " + str(get_positive_accuracy(predictions, ground_truth_test)))
-   print("Negative accuracy: " + str(get_negative_accuracy(predictions, ground_truth_test)))
+   print("Positive accuracy: " + str(pos_acc))
+   print("Negative accuracy: " + str(neg_acc))
+   '''model.save_weights('CNN_weights.h5')
+   model.save('CNN_architecture.h5')
+   '''
+   return [model,pos_acc]
+   
+   
+def save_model(model):
+   model_json = model.to_json()
+   with open("model.json", "w") as json_file:
+      json_file.write(model_json)
+      # serialize weights to HDF5
+   model.save_weights("weights.h5")
+   print("Saved model to disk")
+   
+   
+   
+   
    
 def get_positive_accuracy(pred, truth):
    right_positive = 0
@@ -372,15 +400,30 @@ def get_negative_accuracy(pred, truth):
    
 
 if __name__ == '__main__':
-   organize() 
-   train(10, 32, 'binary_crossentropy', 'adam')   
+   organize()
+   models = []
+   pos_accs = []
+   for i in range(0, 10):
+      output = train(10,32, 'binary_crossentropy', 'adam')
+      models.append(output[0])
+      pos_accs.append(output[1])
+      print(i)
+   print(pos_accs)
+   max_pos = -10
+   ind = -1
+   for i in range(0, len(pos_accs)):
+      if(pos_accs[i] > max_pos):
+         max_pos = pos_accs[i]
+         ind = i
    
+   save_model(models[ind])
+   np.save('pixel_data.npy',[x_train,x_test,y_train,y_test])
    
-   
-   
-   
-   
-   
+      
+
+      
+      
+      
    
    
    
