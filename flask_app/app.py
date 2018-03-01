@@ -1,5 +1,7 @@
 from flask import Flask, render_template, g, request
 import sqlite3
+import os
+import shutil
 
 app = Flask(__name__)
 
@@ -7,7 +9,7 @@ app = Flask(__name__)
 DATABASE = 'database.db'
 
 db = sqlite3.connect(DATABASE)
-db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, assessment TEXT)')
+db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, assessment TEXT, img BINARY, file_source TEXT)')
 db.close()
 
 @app.route("/")
@@ -17,7 +19,7 @@ def home():
    cur = db.cursor()
    cur.execute("select * from patients")
    rows = cur.fetchall()
-   
+   print(rows)
    return render_template('index.html', rows = rows)
     
 @app.route('/new_pat')
@@ -33,13 +35,21 @@ def addpat():
          name = request.form['name']
          age = request.form['age']
          assessment = request.form['assessment']
-         
+         img = request.form['scan']
+         file_source = str(case_num)+".png"
+         try:
+            f = open(img,"rb")
+            data = f.read()
+            binary = sqlite3.Binary(data)
+            writeImage(binary, file_source)
+            print("worked")
+            f.close()
+         except:
+            print("nope sorry bud")
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            cur.execute("INSERT INTO patients (case_num, name, age, assessment)  VALUES (?,?,?,?)",(case_num,name,age,assessment) )
-            print("2")  
+            cur.execute("INSERT INTO patients (case_num, name, age, assessment, img, file_source)  VALUES (?,?,?,?,?,?)",(case_num,name,age,assessment,img, file_source) )
             db.commit()
-            print("3")
             msg = "Record successfully added"
       except:
          db.rollback()
@@ -48,9 +58,23 @@ def addpat():
       finally:      
          return render_template("status_update.html",msg = msg)
          db.close()
+         
+def writeImage(data, source):
+    try:
+        fout = open(source,'wb')    
+        fout.write(data)
+        shutil.move(source,"static/")
+    
+    except IOError, e:    
+        print "not working:  %d: %s" % (e.args[0], e.args[1])
+        
+    finally:
+        if fout:
+            fout.close()       
+    
  
 if __name__ == "__main__":
-    app.run(debug=True)
-    
+   app.run(debug=True)
+   
         
     
