@@ -38,9 +38,13 @@ def addpat():
          img = request.form['scan']
          file_source = str(case_num)+".png"
          try:
-            f = open(img,"rb")
+            print("worked0000")
+            f = open(img,"rb") #not working
+            print("worked0")
             data = f.read()
+            print("worked1")
             binary = sqlite3.Binary(data)
+            print("worked2")
             writeImage(binary, file_source)
             print("worked")
             f.close()
@@ -62,9 +66,11 @@ def addpat():
 def writeImage(data, source):
     try:
         fout = open(source,'wb')    
+        print("average")
         fout.write(data)
+        print("good")
         shutil.move(source,"static/")
-    
+        print("we good fam")
     except IOError, e:    
         print "not working:  %d: %s" % (e.args[0], e.args[1])
         

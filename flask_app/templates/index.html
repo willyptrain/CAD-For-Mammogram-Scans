@@ -15,7 +15,7 @@
 			<p>{{row["name"]}}</p>
 			<p>{{row["age"]}}</p>
 			<p>{{row["assessment"]}}</p>
-			<img src="{{url_for('static', filename='hello.png')}}">{{row['file_source']}}</img>
+			<img src="static/{{row['file_source']}}">{{row['file_source']}}</img>
 		</div>            
 				
 	{% endfor %}
