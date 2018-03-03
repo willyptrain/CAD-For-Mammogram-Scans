@@ -2,14 +2,17 @@ from flask import Flask, render_template, g, request
 import sqlite3
 import os
 import shutil
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
+upload_folder = "static/"
+app.config['UPLOAD_FOLDER'] = upload_folder
 
 DATABASE = 'database.db'
 
 db = sqlite3.connect(DATABASE)
-db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, assessment TEXT, img BINARY, file_source TEXT)')
+db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, assessment TEXT, binary BINARY, filename TEXT)')
 db.close()
 
 @app.route("/")
@@ -35,24 +38,27 @@ def addpat():
          name = request.form['name']
          age = request.form['age']
          assessment = request.form['assessment']
-         img = request.form['scan']
-         file_source = str(case_num)+".png"
-         try:
-            print("worked0000")
-            f = open(img,"rb") #not working
-            print("worked0")
+         file = request.files['scan']
+         filename = secure_filename(file.filename)
+         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+         try:              
+            print("0")
+            f = open(upload_folder+filename,"rb") #not working
+            print("1")
             data = f.read()
-            print("worked1")
+            print("2")
             binary = sqlite3.Binary(data)
-            print("worked2")
-            writeImage(binary, file_source)
-            print("worked")
+            print("3")
+            #writeImage(binary, file_source)
+            #print("4")
             f.close()
          except:
             print("nope sorry bud")
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            cur.execute("INSERT INTO patients (case_num, name, age, assessment, img, file_source)  VALUES (?,?,?,?,?,?)",(case_num,name,age,assessment,img, file_source) )
+            print("1")
+            cur.execute("INSERT INTO patients (case_num, name, age, assessment, binary, filename)  VALUES (?,?,?,?,?,?)",(case_num,name,age,assessment,binary, upload_folder+filename) )
+            print("2")
             db.commit()
             msg = "Record successfully added"
       except:

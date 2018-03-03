@@ -5,7 +5,7 @@
 <head>
 <body>
      
-    <form action = "{{ url_for('addpat') }}" method = "POST">
+    <form action = "{{ url_for('addpat') }}" enctype="multipart/form-data" method = "POST">
          <h3>Patient Info</h3>
          Case<br>
          <input type = "text" name = "case" /></br>
