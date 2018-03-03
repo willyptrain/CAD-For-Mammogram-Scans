@@ -15,7 +15,7 @@
 			<p>{{row["name"]}}</p>
 			<p>{{row["age"]}}</p>
 			<p>{{row["assessment"]}}</p>
-			<img src="{{row['filename']}}">{{row['file_source']}}</img>
+			<img style="height:100px; width:100px;" src="{{row['filename']}}">{{row['file_source']}}</img>
 		</div>            
 				
 	{% endfor %}
@@ -25,7 +25,6 @@
 		height: 200px;
 		width: 200px;
 		border: 2px solid black;
-		
 	}
 	
 </style>
