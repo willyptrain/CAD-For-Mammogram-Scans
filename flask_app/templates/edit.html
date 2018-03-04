@@ -5,20 +5,69 @@
 <head>
 </head>
 <body onload="init()">
-    <canvas style="height: 200px; width: 200px;" id="can"></canvas>
-
+    <canvas style="height: 200px; width: 200px; border: 2px solid black;" id="can"></canvas>
+    <a href="#" class="button" id="btn-download" download="../Desktop/my-file-name.png">Download</a>
 
 </body>
 <script>
-    function init() {
-        var can = document.getElementById("can");
-        var c = can.getContext("2d");
-        //c.fillRect(10,10,10,10);
-        //console.log('{{ file }}')
-        var img = new Image()
-        img.src = '{{ file }}'
-        c.drawImage(img, 0, 0, 200, 200);
+        var canvas = document.getElementById("can");
+        var ctx = can.getContext("2d");
+    function init() {    
+        var img = new Image();
+        img.src = '{{ file }}';
+        ctx.drawImage(img, 0, 0, 200, 200);
     };
+
+var mouse = {x: 0, y: 0};
+    
+
+canvas.addEventListener('mousemove', function(e) {
+  mouse.x = e.pageX + (3*canvas.offsetLeft);
+  mouse.y = e.pageY - (2*canvas.offsetTop);
+  console.log(canvas.offsetLeft);
+}, false);
+
+ctx.lineWidth = 3;
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.strokeStyle = '#00CC99';
+var origin_x = 0;
+var origin_y = 0;
+ 
+canvas.addEventListener('mousedown', function(e) {
+    ctx.beginPath();
+    origin_x = mouse.x;
+    origin_y = mouse.y;
+    console.log(origin_x);
+    ctx.moveTo(mouse.x, mouse.y);
+    canvas.addEventListener('mousemove', onPaint, false);
+}, false);
+ 
+canvas.addEventListener('mouseup', function() {
+    canvas.removeEventListener('mousemove', onPaint, false);
+    ctx.beginPath();
+    ctx.moveTo(mouse.x,mouse.y);
+    ctx.lineTo(origin_x,origin_y);
+    ctx.stroke();
+}, false);
+ 
+var onPaint = function() {
+    ctx.lineTo(mouse.x, mouse.y);
+    ctx.stroke();
+};
+
+var button = document.getElementById('btn-download');
+button.addEventListener('click', function (e) {
+    var dataURL = canvas.toDataURL('image/png');
+    button.href = dataURL;
+});
+
+
+
+
+
+
+
     
     
 </script>
