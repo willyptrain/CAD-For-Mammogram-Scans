@@ -10,13 +10,17 @@
 <body>
 	<a href='/new_pat'><p>New patient</p></a>
 	{% for row in rows %}
-		<div class="patient">
+		</a><div class="patient">
 			<p>{{row["case_num"]}}</p>
 			<p>{{row["name"]}}</p>
 			<p>{{row["age"]}}</p>
 			<p>{{row["assessment"]}}</p>
-			<img style="height:100px; width:100px;" src="{{row['filename']}}">{{row['file_source']}}</img>
-		</div>            
+			<img style="height:100px; width:100px;" src="{{row['filename']}}"></img>
+			<form action = "{{ url_for('edit_img') }}" enctype="multipart/form-data"  method = "GET" >
+				<input type="hidden" name="file_name" value="{{row['filename']}}" />
+				<input type="submit"  />
+			</form>
+		</div>          
 				
 	{% endfor %}
 </body>

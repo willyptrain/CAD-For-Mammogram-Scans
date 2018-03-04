@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+ 
+<head>
+</head>
+<body onload="init()">
+    <canvas style="height: 200px; width: 200px;" id="can"></canvas>
+
+
+</body>
+<script>
+    function init() {
+        var can = document.getElementById("can");
+        var c = can.getContext("2d");
+        //c.fillRect(10,10,10,10);
+        //console.log('{{ file }}')
+        var img = new Image()
+        img.src = '{{ file }}'
+        c.drawImage(img, 0, 0, 200, 200);
+    };
+    
+    
+</script>

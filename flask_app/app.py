@@ -22,12 +22,15 @@ def home():
    cur = db.cursor()
    cur.execute("select * from patients")
    rows = cur.fetchall()
-   print(rows)
    return render_template('index.html', rows = rows)
     
 @app.route('/new_pat')
 def new_patient():
    return render_template('new_patient.html')
+   
+   
+   
+   
    
 @app.route('/addpat',methods = ['POST', 'GET'])
 def addpat(): 
@@ -67,6 +70,15 @@ def addpat():
       finally:      
          return render_template("status_update.html",msg = msg)
          db.close()
+         
+@app.route('/edit_img',methods = ['POST', 'GET'])
+def edit_img(): 
+   file_name = request.args.get('file_name','')
+   print(file_name)
+   return render_template('edit.html', file=file_name)   
+        
+         
+         
          
 def writeImage(data, source):
     try:
