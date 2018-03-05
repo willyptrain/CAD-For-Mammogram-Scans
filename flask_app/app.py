@@ -3,6 +3,13 @@ import sqlite3
 import os
 import shutil
 from werkzeug.utils import secure_filename
+from PIL import Image
+import io
+import re
+import cStringIO
+import base64
+from io import BytesIO
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -74,20 +81,33 @@ def addpat():
 @app.route('/edit_img',methods = ['POST', 'GET'])
 def edit_img(): 
    file_name = request.args.get('file_name','')
-   print(file_name)
    return render_template('edit.html', file=file_name)   
         
-         
-         
+@app.route('/model_predict',methods = ['POST', 'GET'])
+def model_predict():
+   img_url = request.form['pixels'][21:]
+   print("good" + img_url)
+   '''image_data = re.sub('^data:image/.+;base64,', '', img_url).decode('base64')
+   image_PIL = Image.open(cStringIO.StringIO(img_url))
+   image_np = np.array(image_PIL)
+   '''
+   
+   im = Image.open(BytesIO(base64.b64decode(img_url)))
+   im.save('test.png')
+   #print 'Image received: {}'.format(im.shape)
+   
+   
+   return 's' 
+   #img = Image.open(io.StringIO(img_data))
+   #print(img_data)
+   #return img_data
+       
          
 def writeImage(data, source):
     try:
         fout = open(source,'wb')    
-        print("average")
         fout.write(data)
-        print("good")
         shutil.move(source,"static/")
-        print("we good fam")
     except IOError, e:    
         print "not working:  %d: %s" % (e.args[0], e.args[1])
         
@@ -101,3 +121,10 @@ if __name__ == "__main__":
    
         
     
+    
+    
+'''
+Pass blob data onto the database to get to python code so you can convert to PIL and diagnose using cnn
+
+
+'''
