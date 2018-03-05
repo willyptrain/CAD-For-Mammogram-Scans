@@ -9,11 +9,9 @@
  
 <head>
 </head>
-<body onload="init()">
-    <canvas style="height: 200px; width: 200px; border: 2px solid black;" id="can"></canvas>
-    <a href="#" class="button" id="btn-download" download="../Desktop/my-file-name.png">Download</a>
-    <button onclick="get_pixel_data()">to blob</button>
-    <canvas style="height: 200px; width: 200px; border: 2px solid black;" id="can2"></canvas>
+<body>
+    <canvas id="can"></canvas>
+    <img id="pic" src='{{ file }}' style="display: none;"></img>
     <form action = "{{ url_for('model_predict') }}" enctype="multipart/form-data" method = "POST">
         <input type="hidden" name="pixels" id="pixel_data" value='' />
         <input type="submit" />
@@ -22,32 +20,36 @@
         
 </body>
 <script type=text/javascript>
-        var canvas = document.getElementById("can");
-        var ctx = can.getContext("2d");
-        var height = canvas.height; 
-	var width = canvas.width;
+    var canvas = document.getElementById("can");
+    var ctx = canvas.getContext("2d");
     var x1 = null;
     var x2 = null;
     var y1 = null;
     var y2 = null;
-    function init() {    
-        var img = new Image();
-        img.src = '{{ file }}';
-        ctx.drawImage(img, 0, 0, width, height);
-        document.getElementById('pixel_data').value = canvas.toDataURL("img/png");
-    };
+    var img = document.getElementById("pic");
+    var height = img.height; 
+	var width = img.width;
+    var ratio = height / width;
+    var can_height = 500
+    canvas.style.height = can_height.toString() + "px";//(img.height).toString() + "px";
+    canvas.style.width = (can_height/ratio).toString() + "px";//(img.width).toString() + "px";
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0,0,canvas.width, canvas.height);
+    }
+    document.getElementById('pixel_data').value = canvas.toDataURL("img/png");
+
 
 
 var mouse = {x: 0, y: 0};
     
 
 canvas.addEventListener('mousemove', function(e) {
-  mouse.x = e.pageX + (3*canvas.offsetLeft);
-  mouse.y = e.pageY - (2*canvas.offsetTop);
+  mouse.x = e.pageX - (canvas.offsetLeft);
+  mouse.y = e.pageY - (canvas.offsetTop);
   console.log(canvas.offsetLeft);
 }, false);
 
-ctx.lineWidth = 3;
+ctx.lineWidth = 5;
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'rgb(255, 0, 0)';
@@ -76,62 +78,6 @@ var onPaint = function() {
     ctx.lineTo(mouse.x, mouse.y);
     ctx.stroke();
 };
-
-
-
-function get_pixel_data() {
-    x1 = crop()[0];
-    x2 = crop()[2];
-    y1 =  crop()[1];
-    y2 = crop()[3];
-    //(document.getElementById("can2").getContext("2d")).putImageData(pixels,0,0);
-    /*var pixels = new Array(y2-y1);
-    for(var i=y1; i<y2; i++) {
-        pixels[i-y1] = new Array(x2-x1);
-        for(var c=x1; c<x2; c++) {
-            pixels[i-y1][c-x1] = ctx.getImageData(i,c,i+1,c+1).data;
-        }
-    }*/
-    //console.log(pixels);
-    
-    
-    //(document.getElementById("can2").getContext("2d")).fillRect(x1,y1,x2-x1,y2-y1);
-    //document.getElementById('pixel_data').value = ctx.getImageData(x1,y1,x2,y2);
-}
-function predict() {
-    //get_pixel_data();
-    //var pixel_data = ctx.getImageData(x1,y1,x2,y2);
-    var dataUrl = canvas.toDataUrl();
-    document.getElementById('pixel_data').value = dataUrl;
-}
-
-
-function crop() {
-    var firstX = 1000;
-    var firstY = 1000;
-    var lastX = -1;
-    var lastY = -1;
-	for(var i=0; i<width; i++) {
-		for(var c=0; c<height; c++) {
-		if((ctx.getImageData(i,c,1,1).data)[0] == 255 && (ctx.getImageData(i,c,1,1).data)[1] == 0 && (ctx.getImageData(i,c,1,1).data)[2] == 0) {
-				if(i < firstX) {
-					firstX = i;
-				} 
-				if(i > lastX) {
-					lastX = i;
-				}
-				if(c < firstY) {
-					firstY = c;
-				} 
-				if(c > lastY) {
-					lastY = c;
-				}
-			}
-		}		
-	}
-    return [firstX, firstY, lastX, lastY];
-    
-}
 
 
 
