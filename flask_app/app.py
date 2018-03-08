@@ -152,7 +152,7 @@ def load_model():
  
    #(1,28,28,1)
    pred = model.predict(x[0:1])
-   print(pred)
+   return pred
 
 @app.route("/")
 def home():
@@ -219,9 +219,8 @@ def model_predict():
    im = im.resize((im.size[1],im.size[0]), Image.ANTIALIAS)
    im.save('static/test.png')  
    crop_out_lesion('static/test.png')
-   pred = load_model() 
-   print(round(pred.item(1)))
-   return "good"     
+   pred = load_model().item(1)
+   return render_template("prediction.html",prediction=pred)
  
          
 def writeImage(data, source):
@@ -238,6 +237,6 @@ def writeImage(data, source):
     
  
 if __name__ == "__main__":
-   #app.run(debug=True)
+   app.run(debug=True)
    #crop_out_lesion('static/test.png')
-   load_model()
+   #load_model()
