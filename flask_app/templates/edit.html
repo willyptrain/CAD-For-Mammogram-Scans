@@ -16,6 +16,7 @@
     <img id="pic" src='{{ file }}' style="display: none;"></img>
     <form action = "{{ url_for('model_predict') }}" enctype="multipart/form-data" method = "POST">
         <input type="hidden" name="pixels" id="pixel_data" value='' />
+        <input type="hidden" name="case" id="case" value='{{ file }}' />
         <input type="submit" />
     </form>
     

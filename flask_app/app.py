@@ -214,14 +214,16 @@ def edit_img():
 @app.route('/model_predict',methods = ['POST', 'GET'])
 def model_predict():
    img_url = request.form['pixels'][21:]
+   case = request.form['case']
    print(img_url)
    im = Image.open(BytesIO(base64.b64decode(img_url)))
    im = im.resize((im.size[1],im.size[0]), Image.ANTIALIAS)
-   im.save('static/test.png')  
-   crop_out_lesion('static/test.png')
+   im.save(case)  
+   crop_out_lesion(case)
    pred = load_model().item(1)
    return render_template("prediction.html",prediction=pred)
- 
+   
+   
          
 def writeImage(data, source):
     try:
