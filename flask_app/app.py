@@ -70,7 +70,7 @@ def crop_out_lesion(source):
          r = pix[i][c][2]
          b = pix[i][c][0]
          g = pix[i][c][1]
-         if((r != g) and (r != b)): #only apply to first identified lesion
+         if((r != g) and (r != b) and (g == 0) and (b == 0)): #only apply to first identified lesion
             coords.append([c,i])
 
    
@@ -95,7 +95,7 @@ def crop_out_lesion(source):
          green = pix[i][c][0]
          blue = pix[i][c][1]
          #if((abs(red - 255) < 11) and green == 0 and blue == 0): 
-         if((red != green) and (red != blue)):
+         if((red != green) and (red != blue) and (green == 0) and (blue == 0)):
             lesion_with_border[i][c] = [0., 0., 0., 0.]
             #lesion_with_border[i+1][c+1] = [0., 0., 0., 0.]
             #lesion_with_border[i-11][c+1] = [0., 0., 0., 0.]
@@ -220,7 +220,7 @@ def model_predict():
    im.save('static/test.png')  
    crop_out_lesion('static/test.png')
    pred = load_model() 
-   print(pred)
+   print(round(pred.item(1)))
    return "good"     
  
          
@@ -238,6 +238,6 @@ def writeImage(data, source):
     
  
 if __name__ == "__main__":
-   app.run(debug=True)
+   #app.run(debug=True)
    #crop_out_lesion('static/test.png')
-   #load_model()
+   load_model()
