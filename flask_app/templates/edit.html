@@ -11,6 +11,8 @@
 </head>
 <body>
     <canvas id="can"></canvas>
+    <canvas id="can2" style="height: 100px; width: 100px; border: 2px solid black;"></canvas>
+    <button onclick="drawOn()"></button>
     <img id="pic" src='{{ file }}' style="display: none;"></img>
     <form action = "{{ url_for('model_predict') }}" enctype="multipart/form-data" method = "POST">
         <input type="hidden" name="pixels" id="pixel_data" value='' />
@@ -35,11 +37,12 @@
     canvas.style.width = (can_height/ratio).toString() + "px";//(img.width).toString() + "px";
     img.onload = function() {
         ctx.drawImage(img, 0, 0, img.width, img.height, 0,0,canvas.width, canvas.height);
+        document.getElementById('pixel_data').value = canvas.toDataURL("img/png");
     }
-    document.getElementById('pixel_data').value = canvas.toDataURL("img/png");
+    
 
 
-
+/*
 var mouse = {x: 0, y: 0};
     
 
@@ -78,8 +81,15 @@ var onPaint = function() {
     ctx.lineTo(mouse.x, mouse.y);
     ctx.stroke();
 };
-
-
+function drawOn() {
+    var canvas2 = document.getElementById("can2");  
+    var ctx2 = canvas2.getContext("2d");
+    //ctx2.fillRect(10,10,10,10);
+    ctx2.drawImage(canvas, 0, 0, 100, 100);
+    alert(typeof ctx.getImageData(0,0,100,100));
+    
+}
+*/
 
 
 

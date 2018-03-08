@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+ 
+<head>
+</head>
+<body>
+    <img id="pic" src='{{ file }}'></img>
+    <form action = "{{ url_for('model_predict') }}" enctype="multipart/form-data" method = "POST">
+        <input type="hidden" name="pixels" id="pixel_data" value='' />
+        <input type="submit" id="submit" value="predict" />
+    </form>
+    
+
+</body>
+<script>
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var data = this.result;
+        alert("good");
+    }
+    var data = reader.readAsDataURL('{{ file }}');
+    console.log(data);
+    document.getElementById('pixel_data').value = data;
+</script>
