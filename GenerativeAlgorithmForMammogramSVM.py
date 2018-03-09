@@ -150,7 +150,7 @@ def score(x, y, svm, interval):
    if((tn == 0.0) and (tp == totalp)):
       return 0.0
    else:
-      return (float(tp/totalp))
+      return (float((tp+tn)/(totaln+totalp)))
 
 def doCrossover(svm1, svm2):
    features = [[svm1.featSelectAlg,svm2.featSelectAlg],[svm1.kernel, svm2.kernel],[svm1.c, svm2.c], [svm1.gamma, svm2.gamma]]
@@ -159,7 +159,7 @@ def doCrossover(svm1, svm2):
     
 def evolve(): 
    makeFirstGenePool(SVM(0,'poly',2,2))
-   for i in range(0,100):
+   for i in range(0,50):
       fittest = (genePool[getFittestIndex()])
       makeGenePool(fittest)
       numsForMappingFitnessAcrossGens.append(i+1)
