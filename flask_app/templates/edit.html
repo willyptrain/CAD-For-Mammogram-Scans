@@ -17,6 +17,10 @@
     <form action = "{{ url_for('model_predict') }}" enctype="multipart/form-data" method = "POST">
         <input type="hidden" name="pixels" id="pixel_data" value='' />
         <input type="hidden" name="case" id="case" value='{{ file }}' />
+        <input type="hidden" name="age" id="case" value='{{ age }}' />
+        <input type="hidden" name="shape" id="case" value='{{ shape }}' />
+        <input type="hidden" name="density" id="case" value='{{ density }}' />
+        <input type="hidden" name="margin" id="case" value='{{ margin }}' />
         <input type="submit" />
     </form>
     
@@ -33,7 +37,7 @@
     var height = img.height; 
 	var width = img.width;
     var ratio = height / width;
-    var can_height = 500
+    var can_height = 28
     canvas.style.height = can_height.toString() + "px";//(img.height).toString() + "px";
     canvas.style.width = (can_height/ratio).toString() + "px";//(img.width).toString() + "px";
     img.onload = function() {
@@ -91,10 +95,6 @@ function drawOn() {
     
 }
 */
-
-
-
-
     
     
 </script>

@@ -8,17 +8,27 @@
     
 </head>
 <body>
-	<a href='/new_pat'><p>New patient</p></a>
+	<div id="scrollbar">
+		<a href='/new_pat'><button id="new_pat"><strong>New Patient</strong></button></a>
+		<a href='/delete_db'><button id="del_db"><strong>Delete Patients</strong></button></a>
+	</div>
 	{% for row in rows %}
-		</a><div class="patient">
-			<p>{{row["case_num"]}}</p>
-			<p>{{row["name"]}}</p>
-			<p>{{row["age"]}}</p>
-			<p>{{row["assessment"]}}</p>
-			<img style="height:100px; width:100px;" src="{{row['filename']}}"></img>
+		</a><div class="patient">		
+			<img id="img" src="{{row['filename']}}"></img>
+			<p id="case"><br>Case: {{row["case_num"]}}</br></p>
+			<!--<p id="name">Name: {{row["name"]}}</p>
+			<p id="age">{{row["age"]}}</p>
+			<p id="shape">{{row["shape"]}}</p>
+			<p id="density">{{row["density"]}}</p>
+			<p id="marg">{{row["margin"]}}</p>-->
+			<p id="assessment"><br>Assessment: {{row["assessment"]}}</br></p>
 			<form action = "{{ url_for('edit_img') }}" enctype="multipart/form-data"  method = "GET" >
 				<input type="hidden" name="file_name" value="{{row['filename']}}" />
-				<input type="submit"  />
+				<input type="hidden" name="age" value="{{row['age']}}" />
+				<input type="hidden" name="shape" value="{{row['shape']}}" />
+				<input type="hidden" name="density" value="{{row['density']}}" />
+				<input type="hidden" name="margin" value="{{row['margin']}}" />				
+				<input type="submit" value="Get Model Prediction" id="pred_button" />
 			</form>
 		</div>          
 				
@@ -26,10 +36,94 @@
 </body>
 <style>
 	.patient {
-		height: 200px;
-		width: 200px;
-		border: 2px solid black;
+		height: 100px;
+		width: 250px;
+		border: 2px solid rgba(0,0,0,0.9);
+		display: inline-block;
+		margin-right: 40px;
+		margin-left: 40px;
+		margin-top: 10px;
+		margin-bottom: 15px;
+		/*box-shadow: 8px 10px #00b853;*/
+		border-radius: 1px;
+		position: relative;
+		top: 60px;
+		background: white;
+		
 	}
+	#assessment {
+		top: 00px;
+		left: 70px;
+		position: absolute;
+	}
+	#case {
+		top: -20px;
+		left: 70px;
+		position: absolute;
+	}
+	#pred_button {
+		width: 190px;
+		height: 40px;
+		position: absolute;
+		left: 125px;
+		top: 60px;
+		left: 60px;
+		background: #00b853;
+		color: white;
+		font-weight: bold;
+		font-size: 14px;
+	}
+	
+	#img {
+		height: 100px;
+		width; 100px;
+		position: absolute;
+
+	}
+
+	#del_db {
+		height: 30px;
+		width: 140px;
+		position: fixed;
+		top: 10px;
+		left: 1150px;
+		z-index: 1;
+		border-bottom: 4px solid white;
+		border-right: 4px solid transparent;
+		border-left:4px solid transparent;
+		border-top: 4px solid transparent;
+		background: #00b853;
+		color: white;
+		font-size: 14px;
+	}
+	#new_pat {
+		height: 30px;
+		width: 120px;
+		position: fixed;
+		top: 10px;
+		left: 1300px;
+		z-index: 1;
+		border-bottom: 4px solid white;
+		border-right: 4px solid transparent;
+		border-left:4px solid transparent;
+		border-top: 4px solid transparent;
+		background: #00b853;
+		color: white;
+		font-size: 14px;
+	}
+	#scrollbar {
+		height: 50px;
+		width: 1450px;
+		position: fixed;
+		background-color: #00b853;
+		margin: 0px;
+		top: 0px;
+		left: 0px;
+	}
+	#age {
+		
+	}
+	
 	
 </style>
 <script>
