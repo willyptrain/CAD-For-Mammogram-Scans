@@ -11,6 +11,8 @@
 	<div id="scrollbar">
 		<a href='/new_pat'><button id="new_pat"><strong>New Patient</strong></button></a>
 		<a href='/delete_db'><button id="del_db"><strong>Delete Patients</strong></button></a>
+		<a href='/logout'><button id="logout"><strong>Logout</strong></button></a>
+		
 	</div>
 	{% for row in rows %}
 		</a><div class="patient">		
@@ -94,6 +96,20 @@
 		background: #00b853;
 		color: white;
 		font-weight: bold;
+		font-size: 14px;
+	} #logout {
+		height: 30px;
+		width: 50px;
+		position: fixed;
+		top: 10px;
+		left: 850px;
+		z-index: 1;
+		border-bottom: 4px solid white;
+		border-right: 4px solid transparent;
+		border-left:4px solid transparent;
+		border-top: 4px solid transparent;
+		background: #00b853;
+		color: white;
 		font-size: 14px;
 	}
 	

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, request, session
+from flask import Flask, render_template, g, request, session, flash
 import sqlite3
 import os
 import shutil
@@ -173,7 +173,20 @@ def home():
       cur.execute("select * from patients")
       rows = cur.fetchall()
       return render_template('index.html', rows = rows)
-    
+      
+@app.route('/login',methods = ['POST'])
+def login(): 
+   if request.form['password'] == 'p' and request.form['username'] == 'a':   
+      session['logged_in'] = True
+   else:
+      flash("not the correct password")
+   return home()
+   
+@app.route('/logout')
+def logout(): 
+   session['logged_in'] = False
+   return home()
+
 @app.route('/new_pat')
 def new_patient():
    return render_template('new_patient.html') 
@@ -332,6 +345,7 @@ def writeImage(data, source):
     
  
 if __name__ == "__main__":
+   app.secret_key = os.urandom(12)
    app.run(debug=True)
 
    
