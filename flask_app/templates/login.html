@@ -4,7 +4,6 @@
 <head>
 </head>
 <body>
-    {% block body %}
     {% if session['logged_in'] %}
     <p>You're logged in already!</p>
     {% else %}
@@ -14,5 +13,4 @@
       <input type="submit" value="Log in">
     </form>
     {% endif %}
-    {% endblock %}
 </body>
