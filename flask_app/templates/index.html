@@ -22,6 +22,7 @@
 			<p id="density">{{row["density"]}}</p>
 			<p id="marg">{{row["margin"]}}</p>-->
 			<p id="assessment"><br>Assessment: {{row["assessment"]}}</br></p>
+			<p id="model_pred"><br>Model Prediction: {{row["model_prediction"]}}</br></p>
 			<form action = "{{ url_for('edit_img') }}" enctype="multipart/form-data"  method = "GET" >
 				<input type="hidden" name="file_name" value="{{row['filename']}}" />
 				<input type="hidden" name="age" value="{{row['age']}}" />
@@ -30,6 +31,11 @@
 				<input type="hidden" name="margin" value="{{row['margin']}}" />				
 				<input type="submit" value="Get Model Prediction" id="pred_button" />
 			</form>
+			<form action = "{{ url_for('delete_case') }}" enctype="multipart/form-data"  method = "GET" >
+				<input type="hidden" name="file_name" value="{{row['filename']}}" />		
+				<input type="submit" value="Delete case" id="del_button" />
+			</form>
+			
 		</div>          
 				
 	{% endfor %}
@@ -52,21 +58,38 @@
 		
 	}
 	#assessment {
-		top: 00px;
+		top: -10px;
+		left: 70px;
+		position: absolute;
+	}
+	#model_pred {
+		top:10px;
 		left: 70px;
 		position: absolute;
 	}
 	#case {
-		top: -20px;
+		top: -30px;
 		left: 70px;
 		position: absolute;
 	}
 	#pred_button {
-		width: 190px;
-		height: 40px;
+		width: 250px;
+		height: 30px;
 		position: absolute;
-		left: 125px;
-		top: 60px;
+		left: 0px;
+		top: 100px;
+		left: 60px;
+		background: #00b853;
+		color: white;
+		font-weight: bold;
+		font-size: 14px;
+	}
+	#del_button {
+		width: 250px;
+		height: 30px;
+		position: absolute;
+		left: 0px;
+		top: 150px;
 		left: 60px;
 		background: #00b853;
 		color: white;
