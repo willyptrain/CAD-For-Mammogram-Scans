@@ -284,30 +284,31 @@ def model_predict():
          pred = get_svm_prediction(age, shape, density, margin)
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (str(pred)[0:4], case))
+            cur.execute('''UPDATE patients SET model_prediction=? WHERE filename=?''', (str(pred2), case))
             db.commit()
-         return render_template("prediction.html",prediction="svm prediction is "+ str(pred))
+         #return render_template("prediction.html",prediction="svm prediction is "+ str(pred))
+         return render_template("status_update.html",msg = "Model Prediction is " + str(pred))
       else:
-         return render_template("prediction.html",prediction="not enough data to predict")
+         #return render_template("prediction.html",prediction="not enough data to predict")
+         return render_template("status_update.html",msg = "Not enough data to make a prediction.")
    else:
       if((is_a_number(age)) and (is_a_number(shape)) and (is_a_number(density)) and (is_a_number(margin))):
          pred = load_model().item(1)
          pred2 = get_svm_prediction(age, shape, density, margin)
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            print("true2)")
-            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (str(pred)[0:4], case))
-            db.commit()          
-            
-         return render_template("prediction.html",prediction="conv net prediction is:" + str(pred) + "/n" + "svm prediction is " + str(pred2))
+            cur.execute('''UPDATE patients SET model_prediction=? WHERE filename=?''', (str(pred2), case))
+            db.commit()           
+         #return render_template("prediction.html",prediction="conv net prediction is:" + str(pred) + "/n" + "svm prediction is " + str(pred2))
+         return render_template("status_update.html",msg = "Model Prediction is " + str(pred2))
       else:
          pred = load_model().item(1)
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            print(pred)
             cur.execute('''UPDATE patients SET model_prediction=? WHERE filename=?''', (str(pred)[0:4], case))
             db.commit()
-         return render_template("prediction.html",prediction="conv net prediction is:" + str(pred))
+         #return render_template("prediction.html",prediction="conv net prediction is:" + str(pred))
+         return render_template("status_update.html",msg = "Model Prediction is " + str(pred))
          
 def is_a_number(str): 
    contains_letter = False
