@@ -204,7 +204,6 @@ def delete_db():
    os.remove(DATABASE)   
    db = sqlite3.connect(DATABASE)
    db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary BINARY, filename TEXT, model_prediction TEXT)')
-   db.close()
    return render_template('deleted_db.html')   
   
 @app.route('/delete_case',methods = ['POST', 'GET'])
@@ -215,9 +214,10 @@ def delete_case():
       cur.execute('''DELETE FROM patients WHERE filename=?''', (file_name,))
       db.commit()
    return render_template('deleted_db.html') 
+   
 @app.route('/addpat',methods = ['POST', 'GET'])
 def addpat(): 
-   msg = ""
+   msg = "You must add some data"
    if request.method == 'POST':
       try:
          case_num = request.form['case']
