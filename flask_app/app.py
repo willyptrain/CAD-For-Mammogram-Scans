@@ -204,7 +204,7 @@ def delete_db():
    os.remove(DATABASE)   
    db = sqlite3.connect(DATABASE)
    db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary BINARY, filename TEXT, model_prediction TEXT)')
-   return render_template('deleted_db.html')   
+   return render_template('status_update.html', msg="Database Deleted")   
   
 @app.route('/delete_case',methods = ['POST', 'GET'])
 def delete_case(): 
@@ -213,7 +213,7 @@ def delete_case():
       cur = db.cursor()
       cur.execute('''DELETE FROM patients WHERE filename=?''', (file_name,))
       db.commit()
-   return render_template('deleted_db.html') 
+   return render_template('status_update.html', msg="Patient Case Deleted") 
    
 @app.route('/addpat',methods = ['POST', 'GET'])
 def addpat(): 
@@ -232,6 +232,9 @@ def addpat():
          if(file_type != "image/png"): 
             msg = "Only images of PNG type work with this application"
             raise UnboundLocalError('Only images of PNG type work with this application')
+         if(case_num == ""):
+            msg = "Please add a name for your case"
+            raise UnboundLocalError('Please add a name for your case')
          filename = secure_filename(file.filename)
          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
          model_prediction = ""
@@ -244,7 +247,6 @@ def addpat():
             print("nope sorry bud")
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            print("1")
             cur.execute("INSERT INTO patients (case_num, name, age, shape, density, margin, assessment, binary, filename, model_prediction)  VALUES (?,?,?,?,?,?,?,?,?,?)",(case_num,name,age, shape, density, margin, assessment,binary, upload_folder+filename, "") )
             db.commit()
             msg = "Record successfully added"
@@ -282,10 +284,8 @@ def model_predict():
          pred = get_svm_prediction(age, shape, density, margin)
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            print("true)")
             cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (str(pred)[0:4], case))
             db.commit()
-            
          return render_template("prediction.html",prediction="svm prediction is "+ str(pred))
       else:
          return render_template("prediction.html",prediction="not enough data to predict")
@@ -339,8 +339,6 @@ def get_svm_prediction(age, shape, density, margin):
    user_data = (X[len(X)-1:len(X)])
    prediction = (clf.predict(X[len(X)-1:len(X)]))
    return prediction.item(0)
-   
-  
          
 def writeImage(data, source):
     try:

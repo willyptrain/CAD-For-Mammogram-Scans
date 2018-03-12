@@ -18,9 +18,15 @@
             <img class="card-img-top" src="static/admin.png" alt="Card image cap" style="height: 120px; width: 120px; position: absolute; top: 5rem; left: 66rem; border: 4px solid rgb(204,204,204); border-radius: 20px;">
             <div class="card-body"style="justify-content: center; display: flex;">
                 <form action="{{ url_for('login') }}" method="POST" >
-                    <input type="username" name="username" placeholder="Username" style="height: 3rem; width: 30rem; position: absolute; top: 20rem; left: 57rem;">
-                    <input type="password" name="password" placeholder="Password" style="height: 3rem; width: 30rem; position: absolute; top: 23rem; left: 57rem;">
-                    <input type="submit" value="Log in" style="height: 3rem; width: 30rem; position: absolute; top: 28rem; left: 57rem; " class="btn btn-primary">
+                    <div class="input-group">
+                        <i class="glyphicon glyphicon-user" style="position: absolute; top: 21.2rem; left: -15.2rem;z-index: 1;"></i>
+                        <input type="username" name="username" placeholder="Username" style="height: 4rem; width: 28rem; position: absolute; top: 20rem; left: -13rem;">
+                    </div>
+                    <div class="inner-addon left-addon">
+                        <i class="glyphicon glyphicon-lock" style="position: absolute; top: 26.2rem; left: 56.7rem;z-index: 1;"></i>
+                        <input type="password" name="password" placeholder="Password" style="height: 4rem; width: 28rem; position: absolute; top: 25rem; left: 59rem;">
+                    </div>
+                    <input type="submit" value="Log in" style="height: 3rem; width: 30rem; position: absolute; top: 30rem; left: 57rem; " class="btn btn-primary">
                 </form>
             </div>
         </div>
