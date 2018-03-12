@@ -4,47 +4,53 @@
  
 <head>
 	<title>Flask App </title>
-	    
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
     
 </head>
 <body>
-	<div id="scrollbar">
-		<a href='/new_pat'><button id="new_pat"><strong>New Patient</strong></button></a>
-		<a href='/delete_db'><button id="del_db"><strong>Delete Patients</strong></button></a>
-		<a href='/logout'><button id="logout"><strong>Logout</strong></button></a>
-		
-	</div>
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header"><a style="color: rgb(255,250,250);" class="navbar-brand" href="/">RSEF Program</a></div>
+		<a href='/new_pat' class="navbar-brand">New Patient</a>
+		<a href='/logout' class="navbar-brand">Logout</a>
+		<a href="https://github.com/willyptrain/ISR" class="navbar-brand" target="_blank">GitHub Code Repository</a><
+	</nav>
 	{% for row in rows %}
-		</a><div class="patient">		
-			<img id="img" src="{{row['filename']}}"></img>
-			<p id="case"><br>Case: {{row["case_num"]}}</br></p>
+		<div class="card" style="width: 250px; border: 2px solid rgba(223,223,223,0.8); border-radius: 10px; display: inline-block; margin-right: 40px; margin-left: 60px; margin-top: 20px; margin-bottom: 15px;" >		
+			<img class="card-img-top" src="{{row['filename']}}"  alt="Card image cap" style="height: 200px; width: 100%;"></img>
+			<div class="card-body">
+				<h5 class="card-title" style="text-align: center"><strong>Case: {{row['case_num']}}</strong></h5>
+				<p class="card-text" style="text-align: center">Model Prediction: {{row["model_prediction"]}}</p>
+				<form action = "{{ url_for('edit_img') }}" enctype="multipart/form-data"  method = "GET" >
+					<input type="hidden" name="file_name" value="{{row['filename']}}" />
+					<input type="hidden" name="age" value="{{row['age']}}" />
+					<input type="hidden" name="shape" value="{{row['shape']}}" />
+					<input type="hidden" name="density" value="{{row['density']}}" />
+					<input type="hidden" name="margin" value="{{row['margin']}}" />				
+					<input type="submit" value="Get Model Prediction" class="btn btn-primary" />
+				</form>
+				<form action = "{{ url_for('delete_case') }}" enctype="multipart/form-data"  method = "GET" >
+					<input type="hidden" name="file_name" value="{{row['filename']}}" />		
+					<input type="submit" value="Delete case" class="btn btn-primary"/>
+				</form>
+			</div>
+		</div>          
+				
 			<!--<p id="name">Name: {{row["name"]}}</p>
 			<p id="age">{{row["age"]}}</p>
 			<p id="shape">{{row["shape"]}}</p>
 			<p id="density">{{row["density"]}}</p>
-			<p id="marg">{{row["margin"]}}</p>-->
-			<p id="assessment"><br>Assessment: {{row["assessment"]}}</br></p>
-			<p id="model_pred"><br>Model Prediction: {{row["model_prediction"]}}</br></p>
-			<form action = "{{ url_for('edit_img') }}" enctype="multipart/form-data"  method = "GET" >
-				<input type="hidden" name="file_name" value="{{row['filename']}}" />
-				<input type="hidden" name="age" value="{{row['age']}}" />
-				<input type="hidden" name="shape" value="{{row['shape']}}" />
-				<input type="hidden" name="density" value="{{row['density']}}" />
-				<input type="hidden" name="margin" value="{{row['margin']}}" />				
-				<input type="submit" value="Get Model Prediction" id="pred_button" />
-			</form>
-			<form action = "{{ url_for('delete_case') }}" enctype="multipart/form-data"  method = "GET" >
-				<input type="hidden" name="file_name" value="{{row['filename']}}" />		
-				<input type="submit" value="Delete case" id="del_button" />
-			</form>
+			<p id="marg">{{row["margin"]}}</p>
+						<p id="assessment"><br>Assessment: {{row["assessment"]}}</br></p>-->		
 			
-		</div>          
-				
 	{% endfor %}
-	<p style="position: fixed; top: 700px; color: black;">All code is posted on GitHub <a href="https://github.com/willyptrain/ISR" target="_blank">here</a></p>
 </body>
 <style>
-	.patient {
+	/*.patient {
 		height: 100px;
 		width: 250px;
 		border: 2px solid rgba(0,0,0,0.9);
@@ -53,7 +59,7 @@
 		margin-left: 40px;
 		margin-top: 10px;
 		margin-bottom: 15px;
-		/*box-shadow: 8px 10px #00b853;*/
+		box-shadow: 8px 10px #00b853;
 		border-radius: 1px;
 		position: relative;
 		top: 60px;
@@ -82,8 +88,6 @@
 		left: 0px;
 		top: 100px;
 		left: 60px;
-		background: #00b853;
-		color: white;
 		font-weight: bold;
 		font-size: 14px;
 	}
@@ -163,6 +167,7 @@
 	#age {
 		
 	}
+	*/
 	
 	
 </style>

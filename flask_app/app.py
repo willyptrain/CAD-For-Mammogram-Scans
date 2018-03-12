@@ -228,6 +228,10 @@ def addpat():
          margin = request.form['margin']
          assessment = request.form['assessment']
          file = request.files['scan']
+         file_type = (file.content_type)
+         if(file_type != "image/png"): 
+            msg = "Only images of PNG type work with this application"
+            raise UnboundLocalError('Only images of PNG type work with this application')
          filename = secure_filename(file.filename)
          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
          model_prediction = ""
@@ -279,7 +283,7 @@ def model_predict():
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
             print("true)")
-            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (pred, case))
+            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (str(pred)[0:4], case))
             db.commit()
             
          return render_template("prediction.html",prediction="svm prediction is "+ str(pred))
@@ -292,7 +296,7 @@ def model_predict():
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
             print("true2)")
-            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (pred, case))
+            cur.execute('''UPDATE patients SET model_prediction=? WHERE case_num=?''', (str(pred)[0:4], case))
             db.commit()          
             
          return render_template("prediction.html",prediction="conv net prediction is:" + str(pred) + "/n" + "svm prediction is " + str(pred2))
@@ -301,7 +305,7 @@ def model_predict():
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
             print(pred)
-            cur.execute('''UPDATE patients SET model_prediction=? WHERE filename=?''', (pred, case))
+            cur.execute('''UPDATE patients SET model_prediction=? WHERE filename=?''', (str(pred)[0:4], case))
             db.commit()
          return render_template("prediction.html",prediction="conv net prediction is:" + str(pred))
          
@@ -356,11 +360,3 @@ if __name__ == "__main__":
    app.run(debug=True)
 
    
-   
-  
-   '''
-   Does not work with JPEG images or really any file type not of png type
-   
-   
-   
-   '''
