@@ -184,7 +184,7 @@ def load_model():
    x = x.transpose(1,2,0)
    x = np.array([x])
 
-   pred = model.predict(x)
+   pred = model.predict(x[0:1])
    return pred
 
 def save_model(): 
