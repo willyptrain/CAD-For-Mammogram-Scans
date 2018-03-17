@@ -30,7 +30,7 @@ app.config['UPLOAD_FOLDER'] = upload_folder
 DATABASE = 'database.db'
 
 db = sqlite3.connect(DATABASE)
-db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary BINARY, filename TEXT, model_prediction TEXT)')
+db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary TEXT, filename TEXT, model_prediction TEXT)')
 db.close()
 
 
@@ -66,7 +66,7 @@ def login():
    session['logged_in'] = False
    username = request.form['username']
    password = request.form['password']
-   if request.form['password'] == 'password' and request.form['username'] == 'rsef':   
+   if request.form['password'] == 'p' and request.form['username'] == 'rsef':   
       session['logged_in'] = True
    else:
       flash("not the correct password")
@@ -202,7 +202,7 @@ def save_model():
 def delete_db(): 
    os.remove(DATABASE)   
    db = sqlite3.connect(DATABASE)
-   db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary BINARY, filename TEXT, model_prediction TEXT)')
+   db.execute('create table if not exists patients (case_num TEXT, name TEXT, age TEXT, shape TEXT, density TEXT, margin TEXT, assessment TEXT, binary TEXT, filename TEXT, model_prediction TEXT)')
    return render_template('status_update.html', msg="Database Deleted")   
   
 @app.route('/delete_case',methods = ['POST', 'GET'])
@@ -239,14 +239,14 @@ def addpat():
          model_prediction = ""
          try:              
             f = open(upload_folder+filename,"rb") #not working
-            data = f.read()
-            binary = sqlite3.Binary(data)
+            binary = Image.open(f)
+            print(binary)
             f.close()
          except:
             print("nope sorry bud")
          with sqlite3.connect(DATABASE) as db:
             cur = db.cursor()
-            cur.execute("INSERT INTO patients (case_num, name, age, shape, density, margin, assessment, binary, filename, model_prediction)  VALUES (?,?,?,?,?,?,?,?,?,?)",(case_num,name,age, shape, density, margin, assessment,binary, upload_folder+filename, "") )
+            cur.execute("INSERT INTO patients (case_num, name, age, shape, density, margin, assessment, binary, filename, model_prediction)  VALUES (?,?,?,?,?,?,?,?,?,?)",(case_num,name,age, shape, density, margin, assessment,"binary", upload_folder+filename, "") )
             db.commit()
             msg = "Record successfully added"
       except:
@@ -270,15 +270,12 @@ def edit_img():
 def model_predict():
    img_url = request.form['pixels'][21:]
    case = request.form['case']
+   print(case)
    age = request.form['age']
    shape = request.form['shape']
    density = request.form['density']
    margin = request.form['margin']
-   im = Image.open(BytesIO(base64.b64decode(img_url)))
-   im = im.resize((im.size[1],im.size[0]), Image.ANTIALIAS)
-   im.save(case)  
    test_img = crop_out_lesion(case)
-   print(test_img + "000")
    if(test_img == ""): 
       if((is_a_number(age)) and (is_a_number(shape)) and (is_a_number(density)) and (is_a_number(margin))): 
          pred = get_svm_prediction(age, shape, density, margin)
@@ -357,4 +354,5 @@ def writeImage(data, source):
 if __name__ == "__main__":
    app.secret_key = os.urandom(12)
    app.run(debug=True)
-   #print(crop_out_lesion("static/benign_case_1.png"))
+   #print(crop_out_lesion("static/b_case0243.RIGHT_MLO.LJPEG.1_highpass.png"))
+   #print(load_model())
