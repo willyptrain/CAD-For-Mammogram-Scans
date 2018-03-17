@@ -114,16 +114,15 @@ def crop_out_lesion(source):
    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
    pix = get_pixels(source)
    coords = []
+   coords = []
    for i in range(0,pix.shape[0]):
       for c in range(0,pix.shape[1]):
-         r = pix[i][c][2]
-         b = pix[i][c][0]
-         g = pix[i][c][1]
-         if((r != g) and (r != b) and (g == 0) and (b == 0)): #only apply to first identified lesion
+         r = int(pix[i][c][2])
+         b = int(pix[i][c][0])
+         g = int(pix[i][c][1])
+         if(((r != g) and (r != b) and (g == 0) and (b == 0))): #only apply to first identified lesion
             coords.append([c,i])
 
-   
-   
    if(len(coords) == 0):
       return ""#render_template("status_update.html", msg="Did not work, image is not cropped")
          
@@ -279,6 +278,7 @@ def model_predict():
    im = im.resize((im.size[1],im.size[0]), Image.ANTIALIAS)
    im.save(case)  
    test_img = crop_out_lesion(case)
+   print(test_img + "000")
    if(test_img == ""): 
       if((is_a_number(age)) and (is_a_number(shape)) and (is_a_number(density)) and (is_a_number(margin))): 
          pred = get_svm_prediction(age, shape, density, margin)
@@ -290,7 +290,7 @@ def model_predict():
          return render_template("status_update.html",msg = "Model Prediction is " + str(pred))
       else:
          #return render_template("prediction.html",prediction="not enough data to predict")
-         return render_template("status_update.html",msg = "Not enough data to make a prediction.")
+         return render_template("status_update.html",msg = "")
    else:
       if((is_a_number(age)) and (is_a_number(shape)) and (is_a_number(density)) and (is_a_number(margin))):
          pred = load_model().item(1)
@@ -357,5 +357,4 @@ def writeImage(data, source):
 if __name__ == "__main__":
    app.secret_key = os.urandom(12)
    app.run(debug=True)
-
-   
+   #print(crop_out_lesion("static/benign_case_1.png"))
