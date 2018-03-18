@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+ 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+</head>
+<body onload="init_info()" style="background: rgb(34,34,34); color: white;">
+    <h1 style="position: absolute; top: 50px; left: 50px;">User Information: {{ name }}</h1>
+
+  <a href="/"><button type="button" class="btn btn-default" style="background: rgb(34,34,34); color: rgb(204,204,204); border: 1px solid transparent; height: 50px; width: 50px; font-size: 2em;
+      position: absolute; top: 4%; left: 95%
+   " aria-label="Left Align">
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+   </button>
+ </a>
+
+    <img src='{{ file }}'  alt="Card image cap" style="height: 500px; width: 350px; position: absolute; top: 150px; left: 120px;"></img>
+   <div class="container" style="position: absolute; height: 100%; width: 100%; align-items: start; top: 150px; justify-content: center; display: flex;">  
+      <form action = "{{ url_for('update_db') }}" enctype="multipart/form-data" method = "POST">    
+           Case <br>
+           <input style="color: black; margin-bottom: 5px;" id="case" type="text" name = "case" placeholder='{{ case }}' value="{{ case }}"></input><br>
+           <input type="hidden" name="old_case" id="case" value="{{ case }}" />
+           
+
+           Name<br>
+           <input style="color: black; margin-bottom: 5px;" id="name" type="text" name = "name" placeholder='{{ name }}' value="{{ name }}"></input><br>
+           
+
+           Age<br>
+           <input style="color: black; margin-bottom: 5px;" type = "text" name = "age" placeholder='{{ age }}' value="{{ age }}" /><br>
+           
+
+           Shape&nbsp<a href="#" data-toggle="popover" title="Shape Specifications" data-content="round=1 oval=2 lobular=3 irregular=4"><span style="color: white;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a><br>
+           <input style="color: black; margin-bottom: 5px;" type = "text" name = "shape" placeholder='{{ shape }}' value="{{ shape }}"/><br>
+           
+
+           Density&nbsp<a href="#" data-toggle="popover" title="Density Specifications" data-content="high=1 iso=2 low=3 fat-containing=4"><span style="color: white;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a><br>
+           <input style="color: black; margin-bottom: 5px;" type = "text" name = "density" placeholder='{{ density }}' value="{{ density }}"/><br>
+           
+
+           Margin&nbsp<a href="#" data-toggle="popover" title="Margin Specifications" data-content="circumscribed=1 microlobulated=2 obscured=3 ill-defined=4 spiculated=5"><span style="color: white;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a><br>
+           <input style="color: black; margin-bottom: 5px;"  type = "text" name = "margin" placeholder='{{ margin }}' value="{{ margin }}"/><br>
+           
+
+           Radiologist Assessment<br>
+           <input style="color: black; margin-bottom: 5px;" type = "text" name = "assessment" id="img" placeholder='{{ assessment }}' value='{{ assessment }}'/><br>
+           
+           <input type = "submit" style="position: absolute; top: 55%; width: 12%;" value = "Update Information" class="btn btn-primary"/><br>
+           <!-- order: age, shape, density, margin -->
+      </form>
+   </div>
+</body>
+<script type=text/javascript>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();   
+});
+
+    
+    
+</script>
