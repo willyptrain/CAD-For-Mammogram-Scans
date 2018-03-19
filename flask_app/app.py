@@ -53,6 +53,7 @@ def home():
    cur = db.cursor()
    cur.execute("select * from patients")
    rows = cur.fetchall()
+   print(rows)
    return render_template('index.html', rows = rows)
    '''if not session.get('logged_in'):
 	  return render_template('login.html')
@@ -267,6 +268,21 @@ def addpat():
 	  finally:      
 		 return render_template("status_update.html",msg = msg)
 		 db.close()
+
+@app.route('/search', methods = ['GET', 'POST'])
+def search(): 
+	search_value = request.args.get('search')
+	#print(search_value)
+	with sqlite3.connect(DATABASE) as db: 
+		try: 
+			db.row_factory = sqlite3.Row
+			cur = db.cursor()
+			cur.execute("SELECT * FROM patients WHERE case_num like ?", (search_value,))
+			rows = cur.fetchall()
+		except: 
+			return render_template("status_update.html", msg="Could not complete")
+	return render_template("index.html", rows=rows)
+
 		 
 @app.route('/edit_img',methods = ['POST', 'GET'])
 def edit_img(): 
