@@ -7,3 +7,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A convolutional neural network was then developed, learning from a dataset of a few thousand mammogram scans that had been digitized. The convolutional neural network architecture was modelled after a similar CNN architecture trained to classify the MNIST digit database. Following training of the model, the CNN returned an accuracy of close to 89% in classifying highlighted breast lesions into their respective benign or malignant class. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ultimately, this research highlights the great potential of machine learning applications in the healthcare industry, if not their potential in all areas of industry. I aim to continue learning about the advances in machine learning and how they can be applied to solve real world problems.
+
+<p align="center">
+<img src="https://github.com/willyptrain/CAD-For-Mammogram-Scans/blob/master/Screen%20Shot%202019-10-06%20at%209.41.44%20PM.png">
+</p>
